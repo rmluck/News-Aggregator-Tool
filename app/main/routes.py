@@ -4,7 +4,8 @@ from app.main import main_blueprint, auth_blueprint
 from app import database
 from app.models import User, Feed, Category, Article, Bookmark, FeedForUser, FeedInCategory
 import feedparser
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
+import re
 
 # Home route
 @main_blueprint.route("/")
@@ -33,6 +34,39 @@ def login():
             flash("Login failed. Check username and/or password.")
     
     return render_template("login.html")
+
+# Route for account registration
+@auth_blueprint.route("/register", methods=["GET", "POST"])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for("main.home"))
+    
+    if request.method == "POST":
+        email = request.form["email"]
+        username = request.form["username"]
+        password = request.form["password"]
+
+        email_regex = r"[^@]+@[^@]+\.[^@]+"
+        if not re.match(email_regex, email):
+            flash("Invalid email format.")
+            return redirect(url_for("auth.register"))
+
+        existing_user = User.query.filter((User.email == email) | (User.username == username)).first()
+        if existing_user:
+            flash("Email or username already exists. Please log in.")
+            return redirect(url_for("auth.register"))
+        
+        hashed_password = generate_password_hash(password, method="pbkdf2:sha256")
+        new_user = User(email=email, username=username, password_hash=hashed_password)
+
+        database.session.add(new_user)
+        database.session.commit()
+
+        login_user(new_user)
+        flash("Account created successfully.")
+        return redirect(url_for("main.home"))
+    
+    return render_template("register.html")
 
 # Route for user logout
 @auth_blueprint.route("/logout")

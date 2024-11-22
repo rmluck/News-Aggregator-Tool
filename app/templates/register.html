@@ -1,4 +1,4 @@
-<!-- Login page -->
+<!-- Registration page -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -6,24 +6,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
-    <title>Login</title>
+    <title>Registration</title>
 </head>
-<body id="login_body">
-    <div id="register_link">
-        <a href="{{ url_for('auth.register') }}">
-            <button id="register_link_button">Register for New Account</button>
+<body id="register_body">
+    <div id="login_link">
+        <a href="{{ url_for('auth.login') }}">
+            <button id="login_link_button">Log In to Existing Account</button>
         </a>
     </div>
-    <div id="login_container">
-        <h2>Login</h2>
-        <form id="login_form" method="POST" action="{{ url_for('auth.login') }}">
+    <div id="register_container">
+        <h2>Register</h2>
+        <form id="register_form" method="POST" action="{{ url_for('auth.register') }}">
+            <label id="email_label" for="email">Email</label>
+            <input id="email" name="email" type="text" placeholder="Email" required><br>
+
             <label id="username_label" for="username">Username</label>
             <input id="username" name="username" type="text" placeholder="Username" required><br>
 
             <label id="password_label" for="password">Password</label>
             <input id="password" name="password" type="password" placeholder="Password" required><br>
 
-            <button id="login_button" type="submit">Login</button>
+            <button id="register_button" type="submit">Register</button>
         </form>
 
         {% with messages = get_flashed_messages() %}
