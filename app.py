@@ -1,21 +1,10 @@
 """
-Main application file.
+Main entry point of application.
 """
 
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from config import Config
+from app import create_app
 
-app = Flask(__name__)
-app.config.from_object(Config)
-
-database = SQLAlchemy(app)
-
-from models import User, Feed, Category, Article, Bookmark, FeedForUser, FeedInCategory
-
-@app.route("/")
-def home():
-    return "Welcome to RSS Aggregator!"
+app = create_app()
 
 if __name__ == "__main__":
     app.run(debug=True)

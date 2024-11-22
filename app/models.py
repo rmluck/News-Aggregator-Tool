@@ -3,17 +3,25 @@ Defines SQLAlchemy models corresponding to database tables.
 """
 
 from app import database as db
+from flask_login import UserMixin
 
 # Users table
-class User(db.Model):
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(255), nullable=False, unique=True)
     email = db.Column(db.String(255), nullable=False, unique=True)
     password_hash = db.Column(db.String(255), nullable=False)
 
     feeds = db.relationship("FeedForUser", back_populates="user", lazy=True)
-    categories = db.relationship("Category", backref="user", lazy=True)
+    categories = db.relationship("Category", back_populates="user", lazy=True)
     bookmarks = db.relationship("Bookmark", back_populates="user", lazy=True)
+
+    def __repr__(self):
+        return f"<User {self.username}>"
+
+    @staticmethod
+    def get(user_id):
+        return User.query.get(int(user_id))
 
 # Feeds table
 class Feed(db.Model):
