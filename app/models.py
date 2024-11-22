@@ -27,7 +27,7 @@ class User(UserMixin, db.Model):
 class Feed(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     url = db.Column(db.String(512), nullable=False, unique=True)
-    name = db.Column(db.String(255), nullable=False)
+    title = db.Column(db.String(255), nullable=False)
     description = db.Column(db.Text)
 
     users = db.relationship("FeedForUser", back_populates="feed", lazy=True)
@@ -77,6 +77,8 @@ class FeedForUser(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     feed_id = db.Column(db.Integer, db.ForeignKey("feed.id"), nullable=False)
+    custom_title = db.Column(db.String(255))
+    custom_description = db.Column(db.Text)
 
     user = db.relationship("User", back_populates="feeds")
     feed = db.relationship("Feed", back_populates="users")

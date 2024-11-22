@@ -1,0 +1,41 @@
+<!-- Edit feed page -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>Edit Feed</title>
+</head>
+<body id="home_body">
+    <h1>RSS Aggregator Tool</h1>
+    <div id="logout_link">
+        <a href="{{ url_for('auth.logout') }}">
+            <button id="logout_link_button">Logout</button>
+        </a>
+    </div>
+    <div id="edit_feed_container">
+        <h2>Edit Feed</h2>
+        <form id="edit_feed_form" method="POST">
+            <label id="custom_feed_title_label" for="custom_feed_title">Custom Feed Title</label>
+            <input id="custom_feed_title" name="custom_feed_title" type="text" placeholder="Custom Feed Title"><br>
+
+            <label id="custom_feed_description_label" for="custom_feed_description">Custom Feed Description</label>
+            <input id="custom_feed_description" name="custom_feed_description" type="text" placeholder="Custom Feed Description"><br>
+            
+            <button id="edit_feed_button" type="submit">Edit Feed</button>
+        </form>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul id="flash_messages">
+                    {% for message in message %}
+                        <li id="flash">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
+</body>
+</html>

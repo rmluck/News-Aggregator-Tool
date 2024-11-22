@@ -5,11 +5,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
     <title>Home</title>
 </head>
-<body>
+<body id="home_body">
     <h1>RSS Aggregator Tool</h1>
-    <p>You are logged in as {{ current_user.username }}.</p>
-    <a href="{{ url_for('auth.logout') }}">Logout</a>
+    <div id="logout_link">
+        <a href="{{ url_for('auth.logout') }}">
+            <button id="logout_link_button">Logout</button>
+        </a>
+    </div>
+    <p>Welcome {{ current_user.username }}.</p>
+    <div id="add_feed_container">
+        <h2>Add Feed</h2>
+        <form id="add_feed_form" method="POST" action="{{ url_for('main.add_feed') }}">
+            <label id="rss_url_label" for="rss_url">Add New RSS Feed</label>
+            <input id="rss_url" name="rss_url" type="text" placeholder="RSS URL" required><br>
+
+            <button id="add_feed_button" type="submit">Add Feed</button>
+        </form>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul id="flash_messages">
+                    {% for message in message %}
+                        <li id="flash">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    </div>
+    <div id="feeds_list_container">
+        <h2>Your Feeds</h2>
+        <div id="feeds_list">
+            {% for feed_for_user, feed in feeds %}
+                <p>{% if feed_for_user.custom_title %} {{ feed_for_user.custom_title }} {% else %} {{ feed.title }} {% endif %} - <a href="{{ feed.url }}" target="_blank">{{ feed.url }}</a></p>
+                <a href="{{ url_for('main.edit_feed', feed_id=feed.id) }}"><button>Edit Feed</button></a>
+            {% endfor %}
+        </div>
+    </div>
 </body>
 </html>
