@@ -23,7 +23,7 @@ class User(UserMixin, db.Model):
     def get(user_id):
         return User.query.get(int(user_id))
 
-# Feeds table
+# Feed table
 class Feed(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     url = db.Column(db.String(512), nullable=False, unique=True)
@@ -34,7 +34,7 @@ class Feed(db.Model):
     categories = db.relationship("FeedInCategory", back_populates="feed", lazy=True)
     articles = db.relationship("Article", back_populates="feed", lazy=True)
 
-# Categories table
+# Category table
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
@@ -52,18 +52,19 @@ class FeedInCategory(db.Model):
     feed = db.relationship("Feed", back_populates="categories")
     category = db.relationship("Category", back_populates="feeds")
 
-# Articles table
+# Article table
 class Article(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     feed_id = db.Column(db.Integer, db.ForeignKey("feed.id"), nullable=False)
     title = db.Column(db.String(255), nullable=False)
     summary = db.Column(db.Text)
     date = db.Column(db.DateTime)
+    author = db.Column(db.String(255))
     url = db.Column(db.String(512), nullable=False)
 
     feed = db.relation("Feed", back_populates="articles")
 
-# Bookmarks table
+# Bookmark table
 class Bookmark(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
